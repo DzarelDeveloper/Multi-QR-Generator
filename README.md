@@ -30,8 +30,7 @@ Aplikasi web untuk membuat dan membaca QR code dengan berbagai fitur.
   - Drag & drop file (desktop)
 
 - **Fitur Kamera**
-  - Switch kamera otomatis
-  - Deteksi kamera belakang
+  - Deteksi kamera belakang ( Hp )
   - Preview real-time
   - Frame rate: 10 FPS
 
