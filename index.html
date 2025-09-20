@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi QR - Generator & Reader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode/html5-qrcode.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark-950 text-dark-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold mb-2">Multi QR</h1>
+            <p class="text-dark-400">Generator & Reader QR Code</p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="flex justify-center mb-8">
+            <button id="generatorTab" class="px-6 py-2 rounded-l-lg bg-dark-800 text-dark-50 hover:bg-dark-700 transition-colors active">Generator</button>
+            <button id="readerTab" class="px-6 py-2 rounded-r-lg bg-dark-900 text-dark-400 hover:bg-dark-700 transition-colors">Reader</button>
+        </div>
+
+        <!-- Generator Section -->
+        <div id="generatorSection" class="space-y-6">
+            <div class="bg-dark-800 rounded-xl p-6 shadow-lg">
+                <div class="mb-4">
+                    <label for="qrType" class="block text-sm font-medium mb-2">Jenis QR Code</label>
+                    <select id="qrType" class="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="url">URL</option>
+                        <option value="text">Teks</option>
+                        <option value="wifi">WiFi</option>
+                        <option value="contact">Kontak</option>
+                        <option value="email">Email</option>
+                        <option value="phone">Telepon</option>
+                    </select>
+                </div>
+
+                <!-- Dynamic Input Fields -->
+                <div id="dynamicFields" class="space-y-4">
+                    <!-- Fields will be populated by JavaScript -->
+                </div>
+
+                <button id="generateBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg mt-4 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                    Generate QR Code
+                </button>
+            </div>
+
+            <!-- QR Code Result -->
+            <div id="qrResult" class="hidden bg-dark-800 rounded-xl p-6 shadow-lg text-center">
+                <h3 class="text-lg font-medium mb-6">QR Code Berhasil Dibuat</h3>
+                <div id="qrcode" class="mb-8 flex justify-center bg-white p-6 rounded-lg shadow-inner mx-auto max-w-[280px]"></div>
+                <div class="flex justify-center gap-4">
+                    <button id="downloadBtn" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                        Download QR Code
+                    </button>
+                    <button id="newQRBtn" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                        </svg>
+                        Buat QR Baru
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reader Section -->
+        <div id="readerSection" class="hidden space-y-6">
+            <div class="bg-dark-800 rounded-xl p-6 shadow-lg backdrop-blur-sm bg-opacity-80">
+                <div class="flex flex-col space-y-4">
+                    <!-- Camera Button -->
+                    <button id="cameraBtn" class="group w-full bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-medium py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg flex items-center justify-center gap-3 border border-blue-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:rotate-[-8deg] transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-lg">Buka Kamera</span>
+                    </button>
+
+                    <!-- Desktop Drag & Drop Zone -->
+                    <div id="dropZone" class="hidden md:block relative border-2 border-dashed border-dark-600/60 rounded-xl p-8 text-center hover:border-blue-500/80 transition-all cursor-pointer bg-dark-900/50 backdrop-blur-sm group">
+                        <input type="file" id="fileInput" accept="image/*" class="hidden">
+                        <div class="space-y-6 py-4">
+                            <div class="relative">
+                                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-2xl transition-opacity opacity-0 group-hover:opacity-100"></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-dark-400 group-hover:text-blue-500 transition-all transform group-hover:scale-110 group-hover:rotate-[-8deg]" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div class="relative z-10">
+                                <p class="text-dark-200 text-lg mb-2 font-medium">Tarik & lepas gambar QR Code di sini</p>
+                                <p class="text-dark-400 text-sm">atau</p>
+                            </div>
+                            <button id="desktopUploadBtn" class="inline-flex items-center gap-2 bg-dark-700 hover:bg-dark-600 text-white font-medium py-3 px-6 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg border border-white/10">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                Pilih File
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Upload Button -->
+                    <button id="mobileUploadBtn" class="md:hidden w-full bg-dark-700 hover:bg-dark-600 text-white font-medium py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg flex items-center justify-center gap-3 border border-white/10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-lg">Upload Gambar QR</span>
+                    </button>
+                </div>
+
+                <!-- QR Reader Area -->
+                <div id="reader" class="mt-8 rounded-xl overflow-hidden shadow-xl"></div>
+            </div>
+
+            <!-- Scan Result -->
+            <div id="scanResult" class="hidden bg-dark-800 rounded-xl p-6 shadow-lg">
+                <h3 class="text-lg font-medium mb-2">Hasil Scan</h3>
+                <p id="resultText" class="text-dark-300 break-all mb-4"></p>
+                <button id="copyBtn" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                    Salin Hasil
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+/* Custom Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Active Tab Styling */
+.active {
+    background-color: rgb(30 41 59) !important; /* bg-dark-800 */
+    color: rgb(248 250 252) !important; /* text-dark-50 */
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(15 23 42); /* bg-dark-900 */
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(51 65 85); /* bg-dark-700 */
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(71 85 105); /* bg-dark-600 */
+}
+
+/* QR Code Reader Styles */
+#reader {
+    width: 100% !important;
+    border: none !important;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+#reader video {
+    border-radius: 0.5rem;
+}
+
+/* Switch Camera Button Animation */
+@keyframes rotate360 {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+#reader button svg {
+    transition: transform 0.3s ease;
+}
+
+#reader button:hover svg {
+    transform: rotate(180deg);
+}
+
+#reader button:active svg {
+    transform: scale(0.9) rotate(180deg);
+}
+
+/* Input Field Focus States */
+input:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+/* Card Hover Effects */
+.card-hover {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+}
+
+/* Loading Animation */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: calc(50% - 10px);
+    left: calc(50% - 10px);
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* Mobile-First Responsive Adjustments */
+@media (min-width: 640px) {
+    .container {
+        max-width: 640px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 768px;
+    }
+}
+
+/* Dark Theme Specific Styles */
+.dark input,
+.dark select,
+.dark textarea {
+    background-color: rgb(15 23 42); /* bg-dark-900 */
+    color: rgb(248 250 252); /* text-dark-50 */
+    border-color: rgb(51 65 85); /* border-dark-700 */
+}
+
+/* QR Code Container */
+#qrcode {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Animasi dan Efek Visual */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Drag & Drop Animations */
+#dropZone {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeIn 0.5s ease-out;
+    backdrop-filter: blur(8px);
+}
+
+#dropZone.drag-over {
+    transform: scale(1.02);
+    border-color: rgb(59, 130, 246);
+    background-color: rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+}
+
+#dropZone svg,
+#dropZone p {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: float 3s ease-in-out infinite;
+}
+
+#dropZone:hover svg {
+    transform: scale(1.1);
+}
+
+#dropZone.drag-over svg {
+    transform: scale(1.2);
+    color: rgb(59, 130, 246);
+}
